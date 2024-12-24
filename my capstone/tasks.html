@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Tasks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid/main.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/list/main.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- Custom Styles -->
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        header {
+            background-color: #152238;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header nav ul {
+            display: flex;
+            gap: 10px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        header nav a:hover {
+            background-color: #ff5a5f;
+        }
+
+        .main-content {
+            padding: 20px;
+            overflow: scroll;
+        }
+
+        .main-content h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-task-btn {
+            background-color: #152238;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .add-task-btn:hover {
+            background-color: #ff5a5f;
+        }
+
+        .task-list {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .task-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .task-list th, .task-list td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .task-list th {
+            background-color: #f9f9f9;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .task-list td {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .task-list .action-btn {
+            background-color: #152238;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .task-list .action-btn:hover {
+            background-color: #ff5a5f;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            background-color: #152238;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal-content button:hover {
+            background-color: #ff5a5f;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 18px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .modal-content .close:hover {
+            color: #000;
+        }
+        .status-completed {
+    color: green;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: red;
+    font-weight: bold;
+}
+
+.status-checkbox {
+    margin-right: 5px;
+}
+
+tbody {
+  overflow: scroll;
+}
+
+
+/* Container for centralizing content */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Status colors */
+.status-completed {
+  color: green;
+  font-weight: bold;
+}
+
+.status-pending {
+  color: red;
+  font-weight: bold;
+}
+
+
+ /* Main content area */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            width: 100%;
+            min-height: 100vh;
+            background-color: white;
+            padding-top: 90px; /* Account for fixed header */
+        }
+
+        .main-content h1 {
+          margin-top: 20px;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+/* General styles for table */
+#task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: scroll;
+}
+
+#task-table th,
+#task-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+#task-table th {
+  background-color: #110f0f;
+}
+
+/* Center the modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 30%;
+  display: none;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.modal-content {
+ 
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  width: 300px;
+  max-height: 100%; /* Limit height */
+  overflow-y: auto; /* Enable scrolling inside the modal */
+}
+
+/* Modal buttons */
+button {
+  background-color: #fcd200;
+  border: none;
+  color: black;
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #e0b100;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Styling for headers */
+.header {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.header h1 {
+  font-size: 2em;
+}
+
+/* Task List styling */
+.task-list {
+  margin-top: 20px;
+}
+
+/* Add Task Button */
+.add-task-btn {
+  background-color: #fcd200;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.add-task-btn:hover {
+  background-color: #e0b100;
+}
+
+/* Button Styling */
+.cta-button button, .signin-button button, .login-button button {
+  background-color: #fcd200; /* Yellow buttons */
+  color: black; /* Dark text on yellow button */
+  padding: 15px 25px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; /* Space between button and previous elements */
+}
+
+.cta-button button:hover, .signin-button button:hover, .login-button button:hover {
+  background-color: #e5b500; /* Darker yellow on hover */
+}
+
+/* Input Fields */
+input[type="email"], input[type="password"], input[type="text"], input[type="date"], input[type="time"], select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  border: 1px solid #fcd200; /* Yellow border */
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: #333;
+  color: white;
+}
+
+input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+  border-color: #fcd200;
+  outline: none;
+}
+
+
+
+.modal-content {
+  background-color: #333; /* Dark background for modal */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+}
+
+/* Task List Styling */
+.task-list {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.task-list h3 {
+  font-size: 1.6rem;
+  color: #fff; /* White text for tasks */
+}
+
+.task-list ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.task-list li {
+  background-color: #444;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-list li button {
+  background-color: #fcd200; /* Yellow button for tasks */
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.task-list li button:hover {
+  background-color: #e5b500; /* Darker yellow on hover */
+}
+
+/* Task Category Styles */
+.task-category {
+  display: inline-block;
+  background-color: #f71010;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 50px;
+  margin: 5px;
+  cursor: pointer;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.task-category:hover {
+  background-color: #c50909;
+}
+
+ /* Footer */
+ footer {
+            background-color: #152238;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Logo and header text */
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        header .logo h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+          <img src="./WhatsApp_Image_2024-11-16_at_21.29.17_7045bab0-removebg-preview.png" alt="Logo">
+            <h1>Task Manager</h1>
+         
+        </div>
+        <nav>
+            <ul>
+                <li><a href="./dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="./reminder.html"><i class="fas fa-bell"></i> Reminder</a></li>
+                <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+      <!-- Dashboard Actions -->
+      <div class="header">
+        <div class="header-buttons">
+            <button style="box-shadow: 0 0 10px #fcd200, 0 0 20px #fcd200, 0 0 30px #fcd200, 0 0 40px #fcd200;" class="add-task-btn" id="show-add-task-form">Add Task</button>
+        </div>
+    </div>
+
+    <!-- Task List -->
+    <div class="task-list">
+        <h2><i class="fas fa-envelope"> </i> Task List </h2>
+        <table id="task-table">
+            <thead>
+                <tr><th>Task</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Category</th>
+                    <th>Reminder</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Tasks will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for Adding New Task -->
+    <div class="modal" id="taskModal" style="display: none;">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add New Task</h2>
+            <form id="task-form">
+                <input type="text" id="taskName" placeholder="Task Name" required>
+                <textarea id="taskDesc" placeholder="Task Description" required></textarea>
+                <input type="date" id="taskDate" required>
+                <input type="time" id="taskTime" required>
+                <select id="taskCategory">
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                </select
+                <label for="taskReminder">Reminder (minutes before):</label>
+                <input type="number" id="taskReminder" placeholder="Minutes" min="1" required>
+            </form>
+            <div style="display: none;">
+                <label>Status:</label>
+                <input type="radio" id="status-completed" name="status" value="Completed"> Completed
+                <input type="radio" id="status-pending" name="status" value="Pending" checked> Pending
+            </div>
+            <button id="saveButton" onclick="saveTask(event)">OK</button>
+            <button onclick="closeAddTaskModal()">Cancel</button>
+        </div>
+  
+
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Task Manager. All rights reserved. | <a href="mailto:support@taskmaster.com" style="color: white;"><i class="fas fa-paper-plane"></i> Contact Us</a></p>
+</footer>
+<!-- Reminder Sound -->
+<audio id="reminder-audio" src="./funky-and-jazzy-gang-loop-251858.mp3"></audio>
+<script src="task.js"></script>
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/673bfc7d2480f5b4f5a0331c/1id154iro';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
+</body>
+</html>

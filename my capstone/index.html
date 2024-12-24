@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119480575-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-119480575-4');
+    </script>
+
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5779221418702970" crossorigin="anonymous"></script>
+
+    <!-- Google Charts Script -->
+    <script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>
+
+    <!-- Tawk.to Live Chat Script -->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/620ae743a34c245641264298/1frt9eoac';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+
+    <!-- Custom Styles -->
+    <style>
+        /* Reset some default styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* Header styling */
+        header {
+            background-color: #152238;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Logo and header text */
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        header .logo h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* Navigation styling */
+        header nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        header nav ul li {
+            display: inline;
+        }
+
+        header nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        header nav a:hover {
+            background-color: #ff5a5f;
+        }
+
+        /* Hamburger Icon (for mobile) */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+            height: 24px;
+            width: 30px;
+        }
+
+        .hamburger div {
+            width: 100%;
+            height: 4px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        /* Main section styling */
+        main {
+            padding: 60px 20px;
+            text-align: center;
+            background-image: url('./bg.jpeg'); /* Example background image */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            min-height: 400px;
+        }
+
+        main h2 {
+            font-size: 36px;
+            margin: 0 0 20px 0;
+        }
+
+        main p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: #152238 !important;
+            border: #152238 !important;
+            color: white !important;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+        }
+
+        .btn:hover {
+            background-color: #ff5a5f;
+        }
+
+        .login-btn {
+            background: #28a745 !important;
+            border: #28a745 !important;
+        }
+
+        .login-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #152238;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Responsive styling for smaller devices */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header .logo h1 {
+                font-size: 24px;
+            }
+
+            header nav {
+                display: none; /* Hide menu by default */
+                width: 100%;
+                text-align: center;
+                margin-top: 10px;
+            }
+
+            header nav ul {
+                flex-direction: column;
+                padding: 0;
+            }
+
+            header nav a {
+                padding: 10px 15px;
+                font-size: 16px;
+            }
+
+            /* Show hamburger icon on small screens */
+            .hamburger {
+                display: flex;
+            }
+
+            /* Show menu when toggled */
+            header nav.active {
+                display: block;
+            }
+
+            main {
+                padding: 40px 20px;
+            }
+
+            main h2 {
+                font-size: 30px;
+            }
+
+            main p {
+                font-size: 16px;
+            }
+
+            .btn {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header .logo h1 {
+                font-size: 20px;
+            }
+
+            header nav a {
+                font-size: 14px;
+            }
+
+            main h2 {
+                font-size: 26px;
+            }
+
+            main p {
+                font-size: 14px;
+            }
+
+            .btn {
+                font-size: 14px;
+                padding: 10px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <!-- Logo Image, Replace with your logo -->
+            <img src="./WhatsApp_Image_2024-11-16_at_21.29.17_7045bab0-removebg-preview.png" alt="Logo">
+            <h1>Task Master</h1>
+        </div>
+        <!-- Hamburger icon for small screens -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="./about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="./login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li><a href="./get-started.html"><i class="fas fa-rocket"></i> Get Started</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Section -->
+    <main>
+        <h2 style="font-size:80px;">Welcome to the Task Master!</h2>
+        <p>Organize and manage your tasks with ease. Create, track, and complete tasks efficiently.</p>
+        <a class="btn" href="./get-started.html"><i class="fas fa-rocket"></i> Get Started</a>
+        <a href="./login.html" class="btn login-btn" ><i class="fas fa-sign-in-alt"></i> Login</a>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Task Master. All rights reserved. | <a href="mailto:support@taskmaster.com" style="color: white;"><i class="fas fa-paper-plane"></i> Contact Us</a></p>
+    </footer>
+    <script src="task.js"></script>
+
+    <script>
+        // Toggle navigation menu
+        function toggleMenu() {
+            const nav = document.querySelector('header nav');
+            nav.classList.toggle('active');
+        }
+    </script>
+    <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/673bfc7d2480f5b4f5a0331c/1id154iro';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
+
+</body>
+
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119480575-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-119480575-4');
+    </script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #152238;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        header .logo h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* Navigation Styling */
+        header nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        header nav ul li {
+            display: inline;
+        }
+
+        header nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        header nav a:hover {
+            background-color: #ff5a5f;
+        }
+
+        /* Login Form Styling */
+        .login-container {
+            max-width: 700px;
+            margin: 50px auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-container .left,
+        .login-container .right {
+            width: 45%;
+        }
+
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #152238;
+        }
+
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-container input {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .login-container input:focus {
+            border-color: #152238;
+            outline: none;
+        }
+
+        .login-container .btn {
+            background-color: #152238;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-container .btn:hover {
+            background-color: #ff5a5f;
+        }
+
+        .forgot-password {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #152238;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .remember-me {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .remember-me input {
+            margin-right: 5px;
+        }
+
+       /* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    width: 400px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.modal-body p {
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+.modal-footer button {
+    background-color: #152238;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.modal-footer button:hover {
+    background-color: #ff5a5f;
+}
+
+
+        /* Footer Styling */
+        footer {
+            background-color: #152238;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                gap: 0;
+                margin: 20px;
+            }
+
+            .login-container .left,
+            .login-container .right {
+                width: 100%;
+            }
+
+            .login-container h2 {
+                font-size: 20px;
+            }
+
+            .login-container input {
+                padding: 10px;
+            }
+
+            .login-container .btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="./WhatsApp_Image_2024-11-16_at_21.29.17_7045bab0-removebg-preview.png" alt="Logo">
+            <h1>Task Master</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="get-started.html"><i class="fas fa-rocket"></i> Register</a></li>
+            
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Login Form -->
+    <div class="login-container">
+        <div class="left">
+            <h2><i class="fas fa-sign-in-alt"></i> Login to Your Account</h2>
+            <form id="loginForm">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+                <div class="remember-me">
+                    <label><input type="checkbox" id="rememberMe"> Remember Me</label>
+                </div>
+
+                <button type="submit" class="btn"><i class="fas fa-sign-in-alt"> </i> Login</button>
+            </form>
+
+            <div class="forgot-password">
+                <p><a href="#" id="forgotPasswordLink"><i class="fas fa-key"></i> Forgot your password?</a></p>
+            </div>
+        </div>
+
+        <div class="right">
+            <h2><i class="fas fa-user-plus"></i> Don't have an account?</h2>
+            <p><a href="./get-started.html" class="btn"><i class="fas fa-user-plus"> </i> Register Now</a></p>
+        </div>
+    </div>
+  <!-- Forgot Password Modal -->
+  <div class="modal" id="forgotPasswordModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Forgot Password</h3>
+        </div>
+        <div class="modal-body">
+            <p>Please enter your email to reset your password:</p>
+            <input type="email" id="resetEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="modal-footer">
+            <button id="resetPasswordBtn">Send Reset Link</button>
+            <button id="closeForgotModalBtn">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal for Password Reset -->
+<div class="modal" id="passwordResetModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Password Reset</h3>
+        </div>
+        <div class="modal-body">
+            <p id="passwordResetMessage">A password reset link has been sent to your email.</p>
+        </div>
+        <div class="modal-footer">
+            <button id="closePasswordResetModalBtn">Close</button>
+        </div>
+    </div>
+</div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Task Manager. All rights reserved. | <a href="mailto:support@taskmaster.com" style="color: white;"><i class="fas fa-paper-plane"></i> Contact Us</a></p>
+    </footer>
+    <script src="task.js"></script>
+
+    <script>
+      // Handle Forgot Password link
+      document.getElementById('forgotPasswordLink').addEventListener('click', function () {
+          document.getElementById('forgotPasswordModal').style.display = 'flex';
+      });
+
+      // Close Forgot Password Modal
+      document.getElementById('closeForgotModalBtn').addEventListener('click', function () {
+          document.getElementById('forgotPasswordModal').style.display = 'none';
+      });
+
+      // Handle Forgot Password Form Submission
+      document.getElementById('resetPasswordBtn').addEventListener('click', function () {
+          const email = document.getElementById('resetEmail').value;
+
+          if (email) {
+              document.getElementById('passwordResetMessage').textContent = 'A password reset link has been sent to: ' + email;
+              document.getElementById('passwordResetModal').style.display = 'flex';
+              document.getElementById('forgotPasswordModal').style.display = 'none';
+          } else {
+              alert('Please enter a valid email address.');
+          }
+      });
+
+      // Close the Password Reset Modal
+      document.getElementById('closePasswordResetModalBtn').addEventListener('click', function () {
+          document.getElementById('passwordResetModal').style.display = 'none';
+      });
+  </script>
+
+      <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/673bfc7d2480f5b4f5a0331c/1id154iro';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
+
+</body>
+
+</html>
